@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fake News Detector — AI-Powered Credibility Scorer</title>
+  <meta name="description" content="Check whether a news headline is real, likely real, or fake using multi-signal AI analysis across trusted sources." />
+  <meta name="theme-color" content="#0a0812" />
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+
+  <!-- Ambient background -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
+  <div class="wrapper">
+
+    <!-- ── Header ─────────────────────────────────────── -->
+    <header>
+      <div class="logo-badge">
+        <span class="dot"></span>
+        AI News Credibility Engine
+      </div>
+
+      <h1>Fake News Detector</h1>
+
+      <p class="subtitle">
+        Enter any news headline or claim. Our engine searches trusted sources
+        and scores it across four credibility signals in seconds.
+      </p>
+    </header>
+
+    <!-- ── Search card ────────────────────────────────── -->
+    <section class="search-card" aria-label="Search">
+      <div class="input-group">
+        <label for="query-input" class="sr-only">Enter news headline or claim</label>
+        <input
+          type="text"
+          id="query-input"
+          placeholder="e.g. Scientists confirm water found on Mars…"
+          maxlength="500"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="News headline or claim"
+        />
+        <button id="check-btn" aria-label="Check News">
+          <span class="btn-icon">🔍</span>
+          Check News
+        </button>
+      </div>
+
+      <!-- Sample query chips -->
+      <div class="hint-row" role="list" aria-label="Sample queries">
+        <span class="hint-chip" role="listitem" data-query="Ukraine war latest 2025" tabindex="0">🌍 Ukraine war 2025</span>
+        <span class="hint-chip" role="listitem" data-query="Bangladesh election 2024 results" tabindex="0">🗳️ Bangladesh election</span>
+        <span class="hint-chip" role="listitem" data-query="Scientists discover dragons in Antarctica" tabindex="0">🐉 Dragons in Antarctica</span>
+        <span class="hint-chip" role="listitem" data-query="AI beats humans at coding 2025" tabindex="0">🤖 AI beats humans</span>
+        <span class="hint-chip" role="listitem" data-query="NASA moon mission artemis update" tabindex="0">🚀 NASA Artemis</span>
+      </div>
+    </section>
+
+    <!-- ── Loading ─────────────────────────────────────── -->
+    <section id="loading-section" aria-live="polite" aria-label="Loading">
+      <div class="spinner-ring" role="status" aria-label="Searching…"></div>
+      <div class="loading-steps">
+        <div class="loading-step" id="step-1">
+          <span>🔎</span> Searching across the web…
+        </div>
+        <div class="loading-step" id="step-2">
+          <span>🔗</span> Identifying trusted sources…
+        </div>
+        <div class="loading-step" id="step-3">
+          <span>⚖️</span> Calculating credibility score…
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Error ───────────────────────────────────────── -->
+    <div id="error-section" role="alert" aria-live="assertive">
+      <span style="font-size:1.25rem">⚠️</span>
+      <span id="error-msg">Something went wrong.</span>
+    </div>
+
+    <!-- ── Results ─────────────────────────────────────── -->
+    <section id="result-section" aria-label="Analysis results">
+
+      <!-- Score card -->
+      <div class="score-card">
+
+        <div class="verdict-row">
+          <!-- Verdict badge -->
+          <div id="verdict-badge" class="verdict-badge" role="status">—</div>
+
+          <!-- Numeric score -->
+          <div class="score-display">
+            <div id="score-number" class="score-number" aria-live="polite">0</div>
+            <div class="score-label">/ 100 pts</div>
+          </div>
+        </div>
+
+        <!-- Score progress bar -->
+        <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <!-- Signals -->
+        <div class="signals-title">Credibility Signals</div>
+        <div id="signals-grid" class="signals-grid" aria-label="Signal breakdown">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Search time -->
+        <p id="search-time" style="margin-top:1.25rem;font-size:0.75rem;color:var(--text-muted);text-align:right"></p>
+      </div>
+
+      <!-- Sources section -->
+      <div class="score-card">
+        <div class="sources-header">
+          <h2 class="sources-heading">📚 Sources Found</h2>
+          <span id="sources-count" class="sources-count">0 sources</span>
+        </div>
+        <div id="sources-list" class="sources-list" aria-label="Source results">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section><!-- /#result-section -->
+
+    <!-- ── How It Works ────────────────────────────────── -->
+    <section style="margin-top:3rem" aria-labelledby="how-heading">
+      <h2 id="how-heading" style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:1.25rem;color:var(--text-secondary)">
+        How It Works
+      </h2>
+      <div class="signals-grid">
+        <div class="signal-item">
+          <div class="signal-icon">🔒</div>
+          <div class="signal-info">
+            <div class="signal-name">Trusted Domain Check</div>
+            <div class="signal-detail">Checks if BBC, Reuters, AP News, Al Jazeera and 20+ reputable outlets reported it. Worth 40 pts.</div>
+          </div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-icon">📰</div>
+          <div class="signal-info">
+            <div class="signal-name">Multiple Sources</div>
+            <div class="signal-detail">Real stories appear in many places. 2+ unique sources earn 20 pts.</div>
+          </div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-icon">🗓️</div>
+          <div class="signal-info">
+            <div class="signal-name">Recency Check</div>
+            <div class="signal-detail">Articles published within the last 30 days signal an active, verifiable story. Worth 20 pts.</div>
+          </div>
+        </div>
+        <div class="signal-item">
+          <div class="signal-icon">🎯</div>
+          <div class="signal-info">
+            <div class="signal-name">Headline Match</div>
+            <div class="signal-detail">Keyword similarity between your claim and found headlines. ≥40% match earns 20 pts.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verdict key -->
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem">
+        <div class="verdict-badge real"   style="font-size:0.85rem;padding:.3rem .9rem">✅ Real (80–100)</div>
+        <div class="verdict-badge likely" style="font-size:0.85rem;padding:.3rem .9rem">⚠️ Likely Real (50–79)</div>
+        <div class="verdict-badge fake"   style="font-size:0.85rem;padding:.3rem .9rem">❌ Unverified / Fake (&lt;50)</div>
+      </div>
+    </section>
+
+    <!-- ── Footer ──────────────────────────────────────── -->
+    <footer>
+      <p>Built with <span>♥</span> using Python Flask · DuckDuckGo · BeautifulSoup</p>
+      <p style="margin-top:.4rem">Results are algorithmic — always verify with primary sources.</p>
+    </footer>
+
+  </div><!-- /.wrapper -->
+
+  <!-- Keyboard support for hint chips -->
+  <script>
+    document.querySelectorAll(".hint-chip").forEach(chip => {
+      chip.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          chip.click();
+        }
+      });
+    });
+  </script>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
